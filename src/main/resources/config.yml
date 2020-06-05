@@ -1,0 +1,31 @@
+keys:
+  name: "[crate] Key"
+  lore:
+    - "&7Redeem at /warp crates"
+
+crates:
+  vote:
+    displayname: "&6&lVote Crate"
+    rewards:
+      1:
+        item:
+          - ==: org.bukkit.inventory.ItemStack
+              v: 2230
+              type: PAPER
+              amount: 4
+              meta:
+                ==: ItemMeta
+                meta-type: UNSPECIFIC
+                display-name: §a§l$150
+                lore:
+                  - "§cA line of lore."
+                  - "§bAnother line of lore."
+                enchants:
+                  PROTECTION_FIRE: 3
+                  PROTECTION_ENVIRONMENTAL: 5
+                  DURABILITY: 3
+        chance: 4.7
+        enchanted: true
+        commands: {}
+        messages: {}
+        awardItem: false

@@ -1,0 +1,14 @@
+name: Barrel
+main: xyz.nkomarn.Barrel.Barrel
+version: 1.0
+author: TechToolbox (@nkomarn)
+
+commands:
+  keyall:
+    description: "Give every player online a crate key."
+    usage: "/<command> <type> <amount>"
+    permssion: "barrel.keyall"
+
+permissions:
+  barrel.keyall:
+    default: op
