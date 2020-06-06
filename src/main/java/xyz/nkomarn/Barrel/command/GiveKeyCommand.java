@@ -7,7 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.nkomarn.Barrel.Barrel;
-import xyz.nkomarn.Barrel.model.Crate;
+import xyz.nkomarn.Barrel.objects.Crate;
 
 public class GiveKeyCommand implements CommandExecutor {
     @Override
@@ -20,7 +20,7 @@ public class GiveKeyCommand implements CommandExecutor {
             String keyType = args[1];
             int amount = Integer.parseInt(args[2]);
 
-            for (Crate crate : Barrel.crates) {
+            for (Crate crate : Barrel.getCrates()) {
                 if (crate.getName().equalsIgnoreCase(keyType)) {
                     crate.giveKey(player, amount);
                     return true;

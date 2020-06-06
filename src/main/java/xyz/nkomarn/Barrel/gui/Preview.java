@@ -3,7 +3,7 @@ package xyz.nkomarn.Barrel.gui;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import xyz.nkomarn.Barrel.model.Crate;
+import xyz.nkomarn.Barrel.objects.Crate;
 import xyz.nkomarn.Kerosene.gui.Gui;
 import xyz.nkomarn.Kerosene.gui.GuiButton;
 

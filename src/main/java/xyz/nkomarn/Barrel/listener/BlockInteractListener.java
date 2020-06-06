@@ -1,7 +1,6 @@
 package xyz.nkomarn.Barrel.listener;
 
 import net.minecraft.server.v1_15_R1.BlockPosition;
-import net.minecraft.server.v1_15_R1.TileEntityChest;
 import net.minecraft.server.v1_15_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,7 +16,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 import xyz.nkomarn.Barrel.Barrel;
 import xyz.nkomarn.Barrel.gui.Preview;
-import xyz.nkomarn.Barrel.model.Crate;
+import xyz.nkomarn.Barrel.objects.Crate;
 
 public class BlockInteractListener implements Listener {
     @EventHandler
@@ -26,7 +25,7 @@ public class BlockInteractListener implements Listener {
         Block block = event.getClickedBlock();
 
         if (block != null && (block.getType().equals(Material.CHEST) || block.getType().equals(Material.ENDER_CHEST))) {
-            for (Crate crate : Barrel.crates) {
+            for (Crate crate : Barrel.getCrates()) {
                 if (crate.getLocation().equals(block.getLocation())) {
                     event.setCancelled(true);
                     if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
