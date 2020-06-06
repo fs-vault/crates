@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.nkomarn.Barrel.command.GiveKeyCommand;
-import xyz.nkomarn.Barrel.listener.BlockInteractListener;
+import xyz.nkomarn.Barrel.listener.InteractionListener;
 import xyz.nkomarn.Barrel.objects.Crate;
 import xyz.nkomarn.Barrel.objects.Reward;
 
@@ -25,7 +25,7 @@ public class Barrel extends JavaPlugin {
         loadConfig();
 
         getCommand("givekey").setExecutor(new GiveKeyCommand());
-        getServer().getPluginManager().registerEvents(new BlockInteractListener(), this);
+        getServer().getPluginManager().registerEvents(new InteractionListener(), this);
     }
 
     /**

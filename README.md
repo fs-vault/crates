@@ -8,4 +8,4 @@ Barrel aims to be extremely easy to configure, while still providing all of the 
 
 ![Barrel crate preview screenshot >:)](https://i.imgur.com/PFnznPD.png)
 
-Phase is completely open source, so feel free to use it and modify it as you wish. Phase depends on [Kerosene](https://github.com/FirestarterMC/Kerosene). ✨
+Barrel is completely open source, so feel free to use it and modify it as you wish. Barrel depends on [Kerosene](https://github.com/FirestarterMC/Kerosene). ✨
