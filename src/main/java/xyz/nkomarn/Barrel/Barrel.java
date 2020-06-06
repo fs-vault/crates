@@ -1,11 +1,14 @@
 package xyz.nkomarn.Barrel;
 
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.nkomarn.Barrel.command.GiveKeyCommand;
+import xyz.nkomarn.Barrel.command.KeyallCommand;
+import xyz.nkomarn.Barrel.listener.BlockPlaceListener;
 import xyz.nkomarn.Barrel.listener.InteractionListener;
 import xyz.nkomarn.Barrel.objects.Crate;
 import xyz.nkomarn.Barrel.objects.Reward;
@@ -25,6 +28,8 @@ public class Barrel extends JavaPlugin {
         loadConfig();
 
         getCommand("givekey").setExecutor(new GiveKeyCommand());
+        getCommand("keyall").setExecutor(new KeyallCommand());
+        getServer().getPluginManager().registerEvents(new BlockPlaceListener(), this);
         getServer().getPluginManager().registerEvents(new InteractionListener(), this);
     }
 
@@ -74,14 +79,13 @@ public class Barrel extends JavaPlugin {
             });
 
             ConfigurationSection locationConfig = crateConfig.getConfigurationSection("location");
-            Location location = new Location(
-                    Bukkit.getWorld(locationConfig.getString("world")),
+            Block crateBlock = Bukkit.getWorld(locationConfig.getString("world")).getBlockAt(
                     locationConfig.getInt("x"),
                     locationConfig.getInt("y"),
                     locationConfig.getInt("z")
             );
 
-            getCrates().add(new Crate(crateName, crateConfig.getString("color"), location, rewards));
+            getCrates().add(new Crate(crateName, crateConfig.getString("color"), crateBlock, rewards));
         });
     }
 

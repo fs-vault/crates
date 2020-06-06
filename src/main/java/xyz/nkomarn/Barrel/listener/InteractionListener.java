@@ -29,8 +29,10 @@ public class InteractionListener implements Listener {
             return;
         }
 
+        // TODO if shifting, use whole stack
+
         Barrel.getCrates().stream()
-                .filter(crate -> crate.getLocation().equals(block.getLocation()))
+                .filter(crate -> crate.getBlock().equals(block))
                 .findFirst()
                 .ifPresent(crate -> {
                     event.setCancelled(true);
