@@ -2,13 +2,21 @@ name: Barrel
 main: xyz.nkomarn.Barrel.Barrel
 version: 1.0
 author: TechToolbox (@nkomarn)
+api-version: 1.15
+depend: ['Kerosene']
 
 commands:
+  givekey:
+    description: "Give a specific key to an online player."
+    usage: "/<command> <player> <type> <amount>"
+    permission: "barrel.givekey"
   keyall:
     description: "Give every player online a crate key."
     usage: "/<command> <type> <amount>"
-    permssion: "barrel.keyall"
+    permission: "barrel.keyall"
 
 permissions:
+  barrel.givekey:
+    default: op
   barrel.keyall:
     default: op

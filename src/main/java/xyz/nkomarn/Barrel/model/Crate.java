@@ -1,29 +1,23 @@
 package xyz.nkomarn.Barrel.model;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.apache.commons.lang.WordUtils;
+import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import xyz.nkomarn.Barrel.Barrel;
-import xyz.nkomarn.Kerosene.gui.Gui;
-import xyz.nkomarn.Kerosene.gui.GuiButton;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.*;
 
 public class Crate {
-    private final String name, displayName;
-    private final Set<Reward> rewards;
+    private final String name, color;
+    private final Location location;
+    private final List<Reward> rewards;
 
-    public Crate(String name, String displayName, Set<Reward> rewards) {
+    public Crate(String name, String color, Location location, List<Reward> rewards) {
         this.name = name;
-        this.displayName = displayName;
+        this.color = color;
+        this.location = location;
         this.rewards = rewards;
     }
 
@@ -31,26 +25,51 @@ public class Crate {
         return this.name;
     }
 
-    public void openPreview(Player player) {
-        new Preview(player);
+    public Location getLocation() {
+        return this.location;
     }
 
-    public void awardRandomReward(Player player) {
-        List<Integer> chances = new ArrayList<>();
-        // TODO
+    public List<Reward> getRewards() {
+        return this.rewards;
     }
 
-    class Preview extends Gui {
-        public Preview(Player player) {
-            super(player, ChatColor.stripColor(displayName), 45);
-            AtomicInteger slot = new AtomicInteger(-1);
-            rewards.forEach(reward -> addButton(new GuiButton(
-                    this,
-                    reward.getItem(),
-                    slot.getAndIncrement(),
-                    null
-            )));
-            openPreview(player);
+    public boolean isKey(ItemStack key) {
+        if (key == null) return false;
+        net.minecraft.server.v1_15_R1.ItemStack nmsKey = CraftItemStack.asNMSCopy(key);
+        if (nmsKey.hasTag() && nmsKey.getTag().hasKey("crate")) {
+            return nmsKey.getTag().getString("crate").equals(name);
+        }
+        return false;
+    }
+
+    public void giveKey(Player player, int amount) {
+        ItemStack key = new ItemStack(Material.NETHER_STAR, amount);
+        ItemMeta keyMeta = key.getItemMeta();
+        keyMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', String.format(
+                "%s%s Key", color, WordUtils.capitalize(name)
+        )));
+        keyMeta.setLore(Collections.singletonList(ChatColor.translateAlternateColorCodes('&', "&fRedeem at &a/warp crates")));
+        key.setItemMeta(keyMeta);
+
+        net.minecraft.server.v1_15_R1.ItemStack nmsKey = CraftItemStack.asNMSCopy(key);
+        nmsKey.getOrCreateTag().setString("crate", name);
+
+        if (player.getInventory().firstEmpty() == -1) {
+            player.getWorld().dropItemNaturally(player.getLocation().add(0, 1, 0), CraftItemStack.asBukkitCopy(nmsKey));
+        } else {
+            player.getInventory().addItem(CraftItemStack.asBukkitCopy(nmsKey));
+        }
+    }
+
+    public void giveRandomReward(Player player) {
+        double randomWeight = Math.random() * rewards.stream().mapToDouble(Reward::getChance).sum();
+        double countWeight = 0.0;
+        for (Reward reward : rewards) {
+            countWeight += reward.getChance();
+            if (countWeight >= randomWeight) {
+                reward.giveReward(player);
+                return;
+            }
         }
     }
 }
