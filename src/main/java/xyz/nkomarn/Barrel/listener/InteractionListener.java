@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import xyz.nkomarn.Barrel.Barrel;
 import xyz.nkomarn.Barrel.gui.Preview;
@@ -29,8 +30,6 @@ public class InteractionListener implements Listener {
             return;
         }
 
-        // TODO if shifting, use whole stack
-
         Barrel.getCrates().stream()
                 .filter(crate -> crate.getBlock().equals(block))
                 .findFirst()
@@ -43,9 +42,17 @@ public class InteractionListener implements Listener {
                             break;
                         case RIGHT_CLICK_BLOCK:
                             if (crate.isKey(player.getInventory().getItemInMainHand())) {
-                                player.getInventory().getItemInMainHand().subtract();
-                                crate.giveRandomReward(player);
                                 animateCrate(block.getLocation());
+
+                                if (player.isSneaking()) {
+                                    for (int i = 0; i < player.getInventory().getItemInMainHand().getAmount(); i++) {
+                                        crate.giveReward(player);
+                                    }
+                                    player.getInventory().getItemInMainHand().setAmount(0);
+                                } else {
+                                    player.getInventory().getItemInMainHand().subtract();
+                                    crate.giveReward(player);
+                                }
                             } else {
                                 knockback(player, block.getLocation());
                             }
