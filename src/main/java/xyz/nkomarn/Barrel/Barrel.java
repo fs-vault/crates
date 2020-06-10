@@ -57,7 +57,7 @@ public class Barrel extends JavaPlugin {
         crates.getKeys(false).forEach(crateName -> {
             ConfigurationSection crateConfig = crates.getConfigurationSection(crateName);
 
-            List<Reward> rewards = new ArrayList<>();
+            ArrayList<Reward> rewards = new ArrayList<>();
             crateConfig.getConfigurationSection("rewards").getKeys(false).stream().forEach(rewardId -> {
                 ConfigurationSection rewardConfig = crateConfig.getConfigurationSection("rewards." + rewardId);
                 Material rewardMaterial = Material.getMaterial(rewardConfig.getString("item.material", "BARRIER"));
@@ -71,7 +71,7 @@ public class Barrel extends JavaPlugin {
                 rewardItem.setItemMeta(rewardMeta);
                 rewards.add(new Reward(
                         rewardItem,
-                        rewardConfig.getDouble("chance"),
+                        rewardConfig.getDouble("chance", 0),
                         rewardConfig.getBoolean("enchanted"),
                         rewardConfig.getStringList("commands"),
                         rewardConfig.getStringList("messages")
@@ -85,7 +85,13 @@ public class Barrel extends JavaPlugin {
                     locationConfig.getInt("z")
             );
 
-            getCrates().add(new Crate(crateName, crateConfig.getString("color"), crateBlock, rewards));
+            getCrates().add(new Crate(
+                    crateName,
+                    crateConfig.getString("color"),
+                    crateBlock,
+                    rewards,
+                    crateConfig.getInt("prizes", 1)
+            ));
         });
     }
 

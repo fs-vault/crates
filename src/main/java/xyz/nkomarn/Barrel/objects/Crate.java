@@ -1,7 +1,10 @@
 package xyz.nkomarn.Barrel.objects;
 
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
@@ -11,7 +14,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.nkomarn.Barrel.event.CrateRewardEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Represents a crate with rewards and a location.
@@ -19,24 +24,29 @@ import java.util.*;
 public class Crate {
     private final String name, color;
     private final Block block;
-    private final List<Reward> rewards;
+    private final ArrayList<Reward> rewards;
+    private final int prizes;
 
     /**
      * Defines a new crate.
-     * @param name The internal name of the crate.
-     * @param color The color to use for messages with this crate.
-     * @param block The physical block location of the crate.
+     *
+     * @param name    The internal name of the crate.
+     * @param color   The color to use for messages with this crate.
+     * @param block   The physical block location of the crate.
      * @param rewards A list of rewards contained within the crate.
+     * @param prizes  The amount of prizes a player wins at once from the crate.
      */
-    public Crate(String name, String color, Block block, List<Reward> rewards) {
+    public Crate(String name, String color, Block block, ArrayList<Reward> rewards, int prizes) {
         this.name = name;
         this.color = color;
         this.block = block;
         this.rewards = rewards;
+        this.prizes = prizes;
     }
 
     /**
      * Returns the internal name of the crate.
+     *
      * @return The internal name of this crate.
      */
     public String getName() {
@@ -45,6 +55,7 @@ public class Crate {
 
     /**
      * Returns the physical block location of the crate.
+     *
      * @return The block location of this crate.
      */
     public Block getBlock() {
@@ -53,6 +64,7 @@ public class Crate {
 
     /**
      * Returns an ordered list of all of the rewards contained within the crate.
+     *
      * @return All of the rewards in this crate.
      */
     public List<Reward> getRewards() {
@@ -61,6 +73,7 @@ public class Crate {
 
     /**
      * Validates whether an ItemStack is a key for this crate.
+     *
      * @param key An ItemStack to validate.
      * @return Whether the ItemStack is a valid key.
      */
@@ -75,6 +88,7 @@ public class Crate {
 
     /**
      * Adds valid crate keys to the specified player's inventory.
+     *
      * @param player The player to give the keys to.
      * @param amount The amount of keys.
      */
@@ -111,17 +125,20 @@ public class Crate {
 
     /**
      * Award the specified player with a randomly chosen reward from this crate.
+     *
      * @param player The player to give the reward to.
      */
-    public void giveRandomReward(Player player) {
-        double randomWeight = Math.random() * rewards.stream().mapToDouble(Reward::getChance).sum();
-        double countWeight = 0.0;
-        for (Reward reward : rewards) {
-            countWeight += reward.getChance();
-            if (countWeight >= randomWeight) {
-                reward.runActions(player);
-                Bukkit.getPluginManager().callEvent(new CrateRewardEvent(player, this, reward));
-                return;
+    public void giveReward(Player player) {
+        for (int i = 0; i < prizes; i++) {
+            double randomWeight = Math.random() * rewards.stream().mapToDouble(Reward::getChance).sum();
+            double countWeight = 0.0;
+            for (Reward reward : rewards) {
+                countWeight += reward.getChance();
+                if (countWeight >= randomWeight) {
+                    reward.runActions(player);
+                    Bukkit.getPluginManager().callEvent(new CrateRewardEvent(player, this, reward));
+                    break;
+                }
             }
         }
     }

@@ -67,6 +67,9 @@ public class Reward {
      * @param player The player to use for the [player] placeholder.
      */
     public void runActions(Player player) {
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', String.format(
+                "&d&lRewards: &7You received %s&7.", item.getItemMeta().getDisplayName()
+        )));
         commands.forEach(command -> Bukkit.getScheduler().callSyncMethod(Barrel.getBarrel(), () ->
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("[player]", player.getName()))));
         messages.forEach(message -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', message)));
