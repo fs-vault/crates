@@ -13,10 +13,13 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.nkomarn.Barrel.event.CrateRewardEvent;
+import xyz.nkomarn.Kerosene.menu.Menu;
+import xyz.nkomarn.Kerosene.menu.MenuButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Represents a crate with rewards and a location.
@@ -141,5 +144,23 @@ public class Crate {
                 }
             }
         }
+    }
+
+    /**
+     * Displays a crate rewards preview menu to a player.
+     *
+     * @param player The player for which to open the preview.
+     */
+    public void openPreview(Player player) {
+        Menu preview = new Menu(player, WordUtils.capitalize(this.name) + " Crate", 27);
+        AtomicInteger slot = new AtomicInteger(0);
+        this.getRewards().forEach(reward -> preview.addButton(new MenuButton(
+                preview,
+                reward.getItem(),
+                slot.getAndIncrement(),
+                null
+        )));
+        player.playSound(player.getLocation(), Sound.BLOCK_IRON_DOOR_OPEN, 1.0f, 1.0f);
+        preview.open();
     }
 }

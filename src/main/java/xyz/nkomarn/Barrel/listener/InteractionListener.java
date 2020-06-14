@@ -12,10 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import xyz.nkomarn.Barrel.Barrel;
-import xyz.nkomarn.Barrel.gui.Preview;
 
 /**
  * Handles player interactions with crate blocks.
@@ -38,7 +36,7 @@ public class InteractionListener implements Listener {
 
                     switch (event.getAction()) {
                         case LEFT_CLICK_BLOCK:
-                            new Preview(crate, player);
+                            crate.openPreview(player);
                             break;
                         case RIGHT_CLICK_BLOCK:
                             if (crate.isKey(player.getInventory().getItemInMainHand())) {
