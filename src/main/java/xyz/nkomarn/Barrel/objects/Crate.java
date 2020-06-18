@@ -114,11 +114,8 @@ public class Crate {
         key.setItemMeta(keyMeta);
         key.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
-        if (player.getInventory().firstEmpty() == -1) {
-            player.getWorld().dropItemNaturally(player.getLocation().add(0, 1, 0), key);
-        } else {
-            player.getInventory().addItem(key);
-        }
+        player.getInventory().addItem(key).forEach((integer, item) ->
+                player.getWorld().dropItemNaturally(player.getLocation().add(0, 1, 0), item));
 
         if (message) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', String.format(
