@@ -1,10 +1,7 @@
 package xyz.nkomarn.Barrel.objects;
 
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
@@ -12,13 +9,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+import xyz.nkomarn.Barrel.Barrel;
 import xyz.nkomarn.Barrel.event.CrateRewardEvent;
 import xyz.nkomarn.Kerosene.menu.Menu;
 import xyz.nkomarn.Kerosene.menu.MenuButton;
+import xyz.nkomarn.Kerosene.util.item.ItemBuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -82,6 +83,12 @@ public class Crate {
      */
     public boolean isKey(ItemStack key) {
         if (key == null || !key.getType().equals(Material.CAMPFIRE)) return false;
+
+        PersistentDataContainer container = key.getItemMeta().getPersistentDataContainer();
+        if (container.has(Barrel.CRATE_NAMESPACE, PersistentDataType.STRING)) {
+            return container.get(Barrel.CRATE_NAMESPACE, PersistentDataType.STRING).equals(name);
+        }
+        
         net.minecraft.server.v1_15_R1.ItemStack nmsKey = CraftItemStack.asNMSCopy(key);
         if (nmsKey.hasTag() && nmsKey.getTag().hasKey("crate")) {
             return nmsKey.getTag().getString("crate").equals(name);
@@ -96,26 +103,21 @@ public class Crate {
      * @param amount The amount of keys.
      */
     public void giveKey(Player player, int amount, boolean message) {
-        ItemStack key = new ItemStack(Material.CAMPFIRE, amount);
+        ItemStack key = new ItemBuilder(Material.CAMPFIRE, amount)
+                .name(String.format("%s%s Key", color, WordUtils.capitalize(name)))
+                .lore("&7Redeem this key", "&7at /warp crates.")
+                .enchantUnsafe(Enchantment.MENDING, 1)
+                .build();
+
         ItemMeta keyMeta = key.getItemMeta();
-        keyMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', String.format(
-                "%s%s Key", color, WordUtils.capitalize(name)
-        )));
-        keyMeta.setLore(Arrays.asList(
-                ChatColor.GRAY + "Redeem this key",
-                ChatColor.GRAY + "at /warp crates."
-        ));
+        keyMeta.getPersistentDataContainer().set(Barrel.CRATE_NAMESPACE, PersistentDataType.STRING, name);
         key.setItemMeta(keyMeta);
-        key.addUnsafeEnchantment(Enchantment.MENDING, 1);
         key.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
-        net.minecraft.server.v1_15_R1.ItemStack nmsKey = CraftItemStack.asNMSCopy(key);
-        nmsKey.getOrCreateTag().setString("crate", name);
-
         if (player.getInventory().firstEmpty() == -1) {
-            player.getWorld().dropItemNaturally(player.getLocation().add(0, 1, 0), CraftItemStack.asBukkitCopy(nmsKey));
+            player.getWorld().dropItemNaturally(player.getLocation().add(0, 1, 0), key);
         } else {
-            player.getInventory().addItem(CraftItemStack.asBukkitCopy(nmsKey));
+            player.getInventory().addItem(key);
         }
 
         if (message) {
