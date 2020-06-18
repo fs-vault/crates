@@ -10,11 +10,11 @@ depend: ['Kerosene']
 commands:
   givekey:
     description: "Give a specific key to an online player."
-    usage: "/<command> <player> <type> <amount>"
+    usage: "/<command> <player> <type> [amount]"
     permission: "barrel.givekey"
   keyall:
     description: "Give every player online a crate key."
-    usage: "/<command> <type> <amount>"
+    usage: "/<command> <type> [amount]"
     permission: "barrel.keyall"
 
 permissions:

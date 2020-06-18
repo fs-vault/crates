@@ -28,9 +28,7 @@ public class InteractionListener implements Listener {
             return;
         }
 
-        Barrel.getCrates().stream()
-                .filter(crate -> crate.getBlock().equals(block))
-                .findFirst()
+        Barrel.getCrate(block)
                 .ifPresent(crate -> {
                     event.setCancelled(true);
 
@@ -39,20 +37,20 @@ public class InteractionListener implements Listener {
                             crate.openPreview(player);
                             break;
                         case RIGHT_CLICK_BLOCK:
-                            if (crate.isKey(player.getInventory().getItemInMainHand())) {
-                                animateCrate(block.getLocation());
+                            if (!crate.isKey(player.getInventory().getItemInMainHand())) {
+                                knockback(player, block.getLocation());
+                                break;
+                            }
 
-                                if (player.isSneaking()) {
-                                    for (int i = 0; i < player.getInventory().getItemInMainHand().getAmount(); i++) {
-                                        crate.giveReward(player);
-                                    }
-                                    player.getInventory().getItemInMainHand().setAmount(0);
-                                } else {
-                                    player.getInventory().getItemInMainHand().subtract();
+                            animateCrate(block.getLocation());
+                            if (player.isSneaking()) {
+                                for (int i = 0; i < player.getInventory().getItemInMainHand().getAmount(); i++) {
                                     crate.giveReward(player);
                                 }
+                                player.getInventory().getItemInMainHand().setAmount(0);
                             } else {
-                                knockback(player, block.getLocation());
+                                player.getInventory().getItemInMainHand().subtract();
+                                crate.giveReward(player);
                             }
                             break;
                     }
