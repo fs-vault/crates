@@ -3,7 +3,7 @@ package xyz.nkomarn.Barrel.objects;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -19,7 +19,6 @@ import xyz.nkomarn.Kerosene.util.item.ItemBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -82,14 +81,14 @@ public class Crate {
      * @return Whether the ItemStack is a valid key.
      */
     public boolean isKey(ItemStack key) {
-        if (key == null || !key.getType().equals(Material.CAMPFIRE)) return false;
+        if (key == null || !(key.getType().equals(Material.CAMPFIRE) || key.getType().equals(Material.SOUL_CAMPFIRE))) return false;
 
         PersistentDataContainer container = key.getItemMeta().getPersistentDataContainer();
         if (container.has(Barrel.CRATE_NAMESPACE, PersistentDataType.STRING)) {
             return container.get(Barrel.CRATE_NAMESPACE, PersistentDataType.STRING).equals(name);
         }
         
-        net.minecraft.server.v1_15_R1.ItemStack nmsKey = CraftItemStack.asNMSCopy(key);
+        net.minecraft.server.v1_16_R1.ItemStack nmsKey = CraftItemStack.asNMSCopy(key);
         if (nmsKey.hasTag() && nmsKey.getTag().hasKey("crate")) {
             return nmsKey.getTag().getString("crate").equals(name);
         }
@@ -103,7 +102,7 @@ public class Crate {
      * @param amount The amount of keys.
      */
     public void giveKey(Player player, int amount, boolean message) {
-        ItemStack key = new ItemBuilder(Material.CAMPFIRE, amount)
+        ItemStack key = new ItemBuilder(this.name.equals("nether") ? Material.SOUL_CAMPFIRE : Material.CAMPFIRE, amount)
                 .name(String.format("%s%s Key", color, WordUtils.capitalize(name)))
                 .lore("&7Redeem this key", "&7at /warp crates.")
                 .enchantUnsafe(Enchantment.MENDING, 1)
@@ -111,8 +110,8 @@ public class Crate {
 
         ItemMeta keyMeta = key.getItemMeta();
         keyMeta.getPersistentDataContainer().set(Barrel.CRATE_NAMESPACE, PersistentDataType.STRING, name);
+        keyMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         key.setItemMeta(keyMeta);
-        key.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
         player.getInventory().addItem(key).forEach((integer, item) ->
                 player.getWorld().dropItemNaturally(player.getLocation().add(0, 1, 0), item));

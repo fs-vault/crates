@@ -1,13 +1,13 @@
 package xyz.nkomarn.Barrel.listener;
 
-import net.minecraft.server.v1_15_R1.BlockPosition;
-import net.minecraft.server.v1_15_R1.World;
+import net.minecraft.server.v1_16_R1.BlockPosition;
+import net.minecraft.server.v1_16_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_16_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -49,7 +49,9 @@ public class InteractionListener implements Listener {
                                 }
                                 player.getInventory().getItemInMainHand().setAmount(0);
                             } else {
-                                player.getInventory().getItemInMainHand().subtract();
+                                player.getInventory().getItemInMainHand().setAmount(
+                                        Math.max(0, player.getInventory().getItemInMainHand().getAmount() - 1)
+                                );
                                 crate.giveReward(player);
                             }
                             break;

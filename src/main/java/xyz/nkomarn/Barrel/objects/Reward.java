@@ -32,9 +32,9 @@ public class Reward {
         ItemMeta itemMeta = item.getItemMeta();
         List<String> lore = itemMeta.hasLore() ? itemMeta.getLore() : new ArrayList<>();
         lore.add(ChatColor.GRAY + String.format("Chance: %s%%", chance));
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         itemMeta.setLore(lore);
         item.setItemMeta(itemMeta);
-        item.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
         if (enchanted) {
             item.addUnsafeEnchantment(Enchantment.MENDING, 1);
