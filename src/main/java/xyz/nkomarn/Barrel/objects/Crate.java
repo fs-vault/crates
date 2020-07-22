@@ -2,8 +2,7 @@ package xyz.nkomarn.Barrel.objects;
 
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftItemStack;
+import org.bukkit.block.Block;;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -13,9 +12,9 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import xyz.nkomarn.Barrel.Barrel;
 import xyz.nkomarn.Barrel.event.CrateRewardEvent;
-import xyz.nkomarn.Kerosene.menu.Menu;
-import xyz.nkomarn.Kerosene.menu.MenuButton;
-import xyz.nkomarn.Kerosene.util.item.ItemBuilder;
+import xyz.nkomarn.kerosene.menu.Menu;
+import xyz.nkomarn.kerosene.menu.MenuButton;
+import xyz.nkomarn.kerosene.util.item.ItemBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,11 +86,7 @@ public class Crate {
         if (container.has(Barrel.CRATE_NAMESPACE, PersistentDataType.STRING)) {
             return container.get(Barrel.CRATE_NAMESPACE, PersistentDataType.STRING).equals(name);
         }
-        
-        net.minecraft.server.v1_16_R1.ItemStack nmsKey = CraftItemStack.asNMSCopy(key);
-        if (nmsKey.hasTag() && nmsKey.getTag().hasKey("crate")) {
-            return nmsKey.getTag().getString("crate").equals(name);
-        }
+
         return false;
     }
 

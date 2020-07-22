@@ -11,11 +11,12 @@ import xyz.nkomarn.Barrel.listener.BlockPlaceListener;
 import xyz.nkomarn.Barrel.listener.InteractionListener;
 import xyz.nkomarn.Barrel.objects.Crate;
 import xyz.nkomarn.Barrel.objects.Reward;
-import xyz.nkomarn.Kerosene.util.item.ItemBuilder;
+import xyz.nkomarn.kerosene.util.item.ItemBuilder;
 
 import java.util.*;
 
 public class Barrel extends JavaPlugin {
+
     public static NamespacedKey CRATE_NAMESPACE;
     private static Barrel barrel;
 
