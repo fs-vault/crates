@@ -1,5 +1,10 @@
 package xyz.nkomarn.Barrel.objects;
 
+import com.firestartermc.kerosene.gui.GuiPosition;
+import com.firestartermc.kerosene.gui.PlayerGui;
+import com.firestartermc.kerosene.gui.components.item.ItemComponent;
+import com.firestartermc.kerosene.item.ItemBuilder;
+import com.firestartermc.kerosene.util.PlayerUtils;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;;
@@ -12,9 +17,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import xyz.nkomarn.Barrel.Barrel;
 import xyz.nkomarn.Barrel.event.CrateRewardEvent;
-import xyz.nkomarn.kerosene.menu.Menu;
-import xyz.nkomarn.kerosene.menu.MenuButton;
-import xyz.nkomarn.kerosene.util.item.ItemBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,19 +99,19 @@ public class Crate {
      * @param amount The amount of keys.
      */
     public void giveKey(Player player, int amount, boolean message) {
-        ItemStack key = new ItemBuilder(this.name.equals("nether") ? Material.SOUL_CAMPFIRE : Material.CAMPFIRE, amount)
+        var key = ItemBuilder.of(Material.CAMPFIRE)
+                .amount(amount)
                 .name(String.format("%s%s Key", color, WordUtils.capitalize(name)))
                 .lore("&7Redeem this key", "&7at /warp crates.")
                 .enchantUnsafe(Enchantment.MENDING, 1)
                 .build();
 
-        ItemMeta keyMeta = key.getItemMeta();
+        var keyMeta = key.getItemMeta();
         keyMeta.getPersistentDataContainer().set(Barrel.CRATE_NAMESPACE, PersistentDataType.STRING, name);
         keyMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         key.setItemMeta(keyMeta);
 
-        player.getInventory().addItem(key).forEach((integer, item) ->
-                player.getWorld().dropItemNaturally(player.getLocation().add(0, 1, 0), item));
+        PlayerUtils.giveOrDropItem(player, key);
 
         if (message) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', String.format(
@@ -145,13 +147,11 @@ public class Crate {
      * @param player The player for which to open the preview.
      */
     public void openPreview(Player player) {
-        Menu preview = new Menu(player, WordUtils.capitalize(this.name) + " Crate", 27);
+        var preview = new PlayerGui(player, WordUtils.capitalize(this.name) + " Crate", 4);
         AtomicInteger slot = new AtomicInteger(0);
-        this.getRewards().forEach(reward -> preview.addButton(new MenuButton(
-                preview,
-                reward.getItem(),
-                slot.getAndIncrement(),
-                null
+        this.getRewards().forEach(reward -> preview.addElement(new ItemComponent(
+                GuiPosition.fromSlot(slot.getAndIncrement()),
+                reward.getItem()
         )));
         player.playSound(player.getLocation(), Sound.BLOCK_IRON_DOOR_OPEN, 1.0f, 1.0f);
         preview.open();

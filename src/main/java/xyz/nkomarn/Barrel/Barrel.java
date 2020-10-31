@@ -1,5 +1,6 @@
 package xyz.nkomarn.Barrel;
 
+import com.firestartermc.kerosene.item.ItemBuilder;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
@@ -11,8 +12,6 @@ import xyz.nkomarn.Barrel.listener.BlockPlaceListener;
 import xyz.nkomarn.Barrel.listener.InteractionListener;
 import xyz.nkomarn.Barrel.objects.Crate;
 import xyz.nkomarn.Barrel.objects.Reward;
-import xyz.nkomarn.kerosene.util.item.ItemBuilder;
-
 import java.util.*;
 
 public class Barrel extends JavaPlugin {
@@ -96,11 +95,8 @@ public class Barrel extends JavaPlugin {
                 ConfigurationSection rewardConfig = crateConfig.getConfigurationSection("rewards." + rewardId);
                 Material rewardMaterial = Material.getMaterial(rewardConfig.getString("item.material", "BARRIER"));
 
-                ItemStack rewardItem = new ItemBuilder(
-                        new ItemStack(
-                                rewardMaterial == null ? Material.BARRIER : rewardMaterial,
-                                rewardConfig.getInt("item.amount", 1)
-                        ))
+                ItemStack rewardItem = ItemBuilder.of(rewardMaterial == null ? Material.BARRIER : rewardMaterial)
+                        .amount(rewardConfig.getInt("item.amount", 1))
                         .name(rewardConfig.getString("item.name", ""))
                         .lore(rewardConfig.getStringList("item.lore"))
                         .build();
