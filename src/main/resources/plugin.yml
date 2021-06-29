@@ -1,24 +1,10 @@
-name: Barrel
-version: 1.0
-author: TechToolbox (@nkomarn)
-main: xyz.nkomarn.Barrel.Barrel
+name: Crates
 description: A dead simple and secure crates system.
-website: https://firestartermc.com/opensource
-api-version: 1.15
-depend: ['Kerosene']
+main: com.firestartermc.crates.Crates
+author: Firestarter Minecraft Servers
+website: https://firestartermc.com
+version: 2.0
+api-version: 1.17
 
-commands:
-  givekey:
-    description: "Give a specific key to an online player."
-    usage: "/<command> <player> <type> [amount]"
-    permission: "barrel.givekey"
-  keyall:
-    description: "Give every player online a crate key."
-    usage: "/<command> <type> [amount]"
-    permission: "barrel.keyall"
-
-permissions:
-  barrel.givekey:
-    default: op
-  barrel.keyall:
-    default: op
+depend:
+  - Kerosene

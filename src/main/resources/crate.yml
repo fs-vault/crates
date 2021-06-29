@@ -1,0 +1,23 @@
+name: vote
+display-name: "&e&lVote"
+block:
+  x: 19700
+  y: 76
+  z: -47041
+  world: world
+
+rewards:
+  1:
+    display:
+      item: PAPER
+      name: "&a&l+ $150 balance"
+      amount: 1
+      lore:
+        - "&fAdds $150 to your balance."
+        - "&fGo support local businesses!"
+    chance: 4.7
+    actions:
+      commands:
+        - economy give {player} 150
+      messages:
+        - Added money to your balance- go support local businesses!
