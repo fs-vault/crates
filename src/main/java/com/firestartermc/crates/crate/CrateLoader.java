@@ -67,7 +67,7 @@ public class CrateLoader {
     private static Reward readReward(@NotNull ConfigurationSection section) {
         var chance = section.getDouble("chance");
         var item = readDisplayItem(section.getConfigurationSection("display"))
-                .addLore(String.format("Chance: %s%%", chance))
+                .addLore("&r ", String.format("&#96f1ffChance: %s%%", chance))
                 .build();
         var actions = readActions(section.getConfigurationSection("actions"));
 

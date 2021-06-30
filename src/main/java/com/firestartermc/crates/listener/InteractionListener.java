@@ -1,8 +1,8 @@
 package com.firestartermc.crates.listener;
 
 import com.firestartermc.crates.Crates;
+import com.firestartermc.crates.animation.FlashAnimation;
 import com.firestartermc.crates.crate.CratePreview;
-import com.firestartermc.kerosene.util.PlayerUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -31,16 +31,21 @@ public class InteractionListener implements Listener {
         }
 
         event.setCancelled(true);
+        var player = event.getPlayer();
         var item = event.getItem();
 
         if (item != null && crate.isKey(item)) {
+            if (plugin.animationController().isViewingAnimation(player)) {
+                return;
+            }
+
             var reward = crate.selectRandomReward();
-            reward.actions().forEach(action -> action.perform(reward, event.getPlayer()));
-            // TODO do reward celebration or something idfk
-            // TODO play an epic 1.17 sound or something
+            plugin.animationController().playAnimation(player, new FlashAnimation(crate, reward, player));
+
+            item.subtract();
             return;
         }
 
-        new CratePreview(crate, event.getPlayer()).open();
+        new CratePreview(crate, player).open();
     }
 }

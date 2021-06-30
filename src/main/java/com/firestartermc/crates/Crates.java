@@ -1,5 +1,6 @@
 package com.firestartermc.crates;
 
+import com.firestartermc.crates.animation.AnimationController;
 import com.firestartermc.crates.command.GiveKeyCommand;
 import com.firestartermc.crates.crate.Crate;
 import com.firestartermc.crates.crate.CrateLoader;
@@ -15,10 +16,12 @@ import java.util.Map;
 public class Crates extends JavaPlugin {
 
     private Map<Block, Crate> registeredCrates;
+    private AnimationController animationController;
 
     @Override
     public void onEnable() {
         registeredCrates = CrateLoader.loadAllCrates(this);
+        animationController = new AnimationController(this);
 
         var pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new InteractionListener(this), this);
@@ -31,5 +34,10 @@ public class Crates extends JavaPlugin {
     @NotNull
     public Map<Block, Crate> registeredCrates() {
         return registeredCrates;
+    }
+
+    @NotNull
+    public AnimationController animationController() {
+        return animationController;
     }
 }
