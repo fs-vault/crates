@@ -14,7 +14,7 @@ public class CratePreview extends PlayerGui {
     private final Crate crate;
 
     public CratePreview(@NotNull Crate crate, @NotNull Player player) {
-        super(player, ChatColor.RESET + WordUtils.capitalize(crate.name()) + " Crate", (int) Math.ceil(crate.rewards().size() / 9F) + 1);
+        super(player, ChatColor.RESET + WordUtils.capitalize(crate.name()) + " Crate", (int) Math.ceil(crate.rewards().size() / 9F));
         this.crate = crate;
 
         int slot = 0;

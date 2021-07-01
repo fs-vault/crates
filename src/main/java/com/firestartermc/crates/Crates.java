@@ -25,7 +25,7 @@ public class Crates extends JavaPlugin {
 
         var pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new InteractionListener(this), this);
-        pluginManager.registerEvents(new KeyPlaceListener(), this);
+        pluginManager.registerEvents(new KeyPlaceListener(this), this);
 
         var commandManager = Kerosene.getKerosene().getCommandManager();
         commandManager.registerCommands(new GiveKeyCommand(this));

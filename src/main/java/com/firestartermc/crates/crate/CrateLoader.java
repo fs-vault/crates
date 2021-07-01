@@ -43,10 +43,11 @@ public class CrateLoader {
     private static Crate readCrate(@NotNull Configuration config) {
         var name = config.getString("name").toLowerCase();
         var displayName = MessageUtils.formatColors(config.getString("display-name"), true);
+        var keyMaterial = Material.valueOf(config.getString("key-material"));
         var block = readBlock(config.getConfigurationSection("block"));
         var rewards = readRewards(config.getConfigurationSection("rewards"));
 
-        return new Crate(name, displayName, block, rewards, 1); // TODO items per roll
+        return new Crate(name, displayName, block, rewards, 1, keyMaterial); // TODO items per roll
     }
 
     @NotNull
@@ -79,7 +80,7 @@ public class CrateLoader {
         var builder = ItemBuilder.of(Material.valueOf(section.getString("item")))
                 .amount(section.getInt("amount", 1))
                 .enchantUnsafe(Enchantment.MENDING, 1)
-                .addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                .addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES);
 
         if (section.contains("name")) {
             builder.name(section.getString("name"));

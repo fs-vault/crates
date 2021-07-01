@@ -10,9 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Represents a loot crate, which can be opened with a
@@ -22,9 +20,8 @@ import java.util.Set;
  * @since 1.0
  */
 public record Crate(@NotNull String name, @NotNull String displayName, @NotNull Block block,
-                    @NotNull List<Reward> rewards, int prizesPerRoll) {
+                    @NotNull List<Reward> rewards, int prizesPerRoll, @NotNull Material keyMaterial) {
 
-    public static final Set<Material> VALID_KEY_MATERIALS = EnumSet.of(Material.CAMPFIRE, Material.SOUL_CAMPFIRE);
     public static final NamespacedKey KEY_CRATE_NBT = new NamespacedKey("barrel", "crate");
 
     /**
@@ -36,7 +33,7 @@ public record Crate(@NotNull String name, @NotNull String displayName, @NotNull 
      */
     @NotNull
     public ItemStack key(int amount) {
-        return ItemBuilder.of(Material.CAMPFIRE)
+        return ItemBuilder.of(keyMaterial())
                 .amount(amount)
                 .name(displayName + " Crate Key")
                 .lore(
@@ -61,7 +58,7 @@ public record Crate(@NotNull String name, @NotNull String displayName, @NotNull 
      * @since 1.0
      */
     public boolean isKey(@NotNull ItemStack key) {
-        if (!VALID_KEY_MATERIALS.contains(key.getType())) {
+        if (keyMaterial() != key.getType()) {
             return false;
         }
 

@@ -40,7 +40,8 @@ public class InteractionListener implements Listener {
             }
 
             var reward = crate.selectRandomReward();
-            plugin.animationController().playAnimation(player, new FlashAnimation(crate, reward, player));
+            var lightning = crate.name().equals("luminous"); // TODO dum lazy hack
+            plugin.animationController().playAnimation(player, new FlashAnimation(crate, reward, player, lightning));
 
             item.subtract();
             return;

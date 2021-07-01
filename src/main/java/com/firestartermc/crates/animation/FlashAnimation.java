@@ -1,6 +1,7 @@
 package com.firestartermc.crates.animation;
 
 import com.firestartermc.crates.animation.entity.ClientsideItem;
+import com.firestartermc.crates.animation.entity.ClientsideLightning;
 import com.firestartermc.crates.crate.Crate;
 import com.firestartermc.crates.crate.Reward;
 import com.firestartermc.crates.util.NmsUtils;
@@ -17,14 +18,16 @@ public class FlashAnimation implements Animation {
     private final Reward reward;
     private final Player player;
     private final Random random;
+    private final boolean lightning;
     private ClientsideItem item;
     private int tickCounter;
 
-    public FlashAnimation(@NotNull Crate crate, @NotNull Reward reward, @NotNull Player player) {
+    public FlashAnimation(@NotNull Crate crate, @NotNull Reward reward, @NotNull Player player, boolean lightning) {
         this.crate = crate;
         this.reward = reward;
         this.player = player;
         this.random = new Random();
+        this.lightning = lightning;
     }
 
     @Override
@@ -58,10 +61,15 @@ public class FlashAnimation implements Animation {
 
         if (tickCounter == 41) {
             item.setItem(reward.item());
-
             player.spawnParticle(Particle.FLASH, location, 1);
             player.playSound(location, Sound.ENTITY_FIREWORK_ROCKET_BLAST_FAR, 1.0f, 1.0f);
             player.playSound(location, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 2.0f, 1.0f);
+
+            if (lightning) {
+                player.playSound(location, Sound.ENTITY_ENDER_DRAGON_GROWL, 1.5f, 1.7f);
+                new ClientsideLightning(player, crate.block().getLocation().add(0.5, 0, 0.5)).spawn();
+            }
+
             return;
         }
 
