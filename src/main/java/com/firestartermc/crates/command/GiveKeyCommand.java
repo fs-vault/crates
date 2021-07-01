@@ -36,9 +36,7 @@ public class GiveKeyCommand extends Command {
     @CommandPermission("crates.give")
     @Syntax("<player> <crate> [amount]")
     public void onGive(CommandSender sender, OnlinePlayer player, String crateName, @Optional Integer amount) {
-        var crate = crates.registeredCrates().values().stream()
-                .filter(c -> c.name().equals(crateName))
-                .findFirst();
+        var crate = crates.crateByName(crateName);
 
         if (crate.isEmpty()) {
             sender.sendMessage("Invalid crate type.");

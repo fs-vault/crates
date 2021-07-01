@@ -2,6 +2,7 @@ package com.firestartermc.crates;
 
 import com.firestartermc.crates.animation.AnimationController;
 import com.firestartermc.crates.command.GiveKeyCommand;
+import com.firestartermc.crates.command.KeyAllCommand;
 import com.firestartermc.crates.crate.Crate;
 import com.firestartermc.crates.crate.CrateLoader;
 import com.firestartermc.crates.listener.InteractionListener;
@@ -12,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class Crates extends JavaPlugin {
 
@@ -29,6 +31,14 @@ public class Crates extends JavaPlugin {
 
         var commandManager = Kerosene.getKerosene().getCommandManager();
         commandManager.registerCommands(new GiveKeyCommand(this));
+        commandManager.registerCommands(new KeyAllCommand(this));
+    }
+
+    @NotNull
+    public Optional<Crate> crateByName(@NotNull String name) {
+        return registeredCrates().values().stream()
+                .filter(c -> c.name().equals(name))
+                .findFirst();
     }
 
     @NotNull
