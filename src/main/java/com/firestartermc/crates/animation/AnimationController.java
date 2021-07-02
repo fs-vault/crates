@@ -3,7 +3,6 @@ package com.firestartermc.crates.animation;
 import com.firestartermc.crates.Crates;
 import com.firestartermc.crates.crate.Crate;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -11,7 +10,7 @@ import java.util.Map;
 
 public class AnimationController implements Runnable {
 
-    private final Map<Player, Animation> playingAnimations;
+    private final Map<Crate, Animation> playingAnimations;
 
     public AnimationController(@NotNull Crates crates) {
         this.playingAnimations = new HashMap<>();
@@ -19,12 +18,12 @@ public class AnimationController implements Runnable {
         Bukkit.getScheduler().runTaskTimer(crates, this, 0L, 1L);
     }
 
-    public boolean isViewingAnimation(@NotNull Player player) {
-        return playingAnimations.containsKey(player);
+    public boolean isBeingViewed(@NotNull Crate crate) {
+        return playingAnimations.containsKey(crate);
     }
 
-    public void playAnimation(@NotNull Player player, @NotNull Animation animation) {
-        playingAnimations.put(player, animation);
+    public void playAnimation(@NotNull Crate crate, @NotNull Animation animation) {
+        playingAnimations.put(crate, animation);
         animation.play();
     }
 

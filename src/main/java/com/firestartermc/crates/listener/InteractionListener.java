@@ -1,7 +1,7 @@
 package com.firestartermc.crates.listener;
 
 import com.firestartermc.crates.Crates;
-import com.firestartermc.crates.animation.FlashAnimation;
+import com.firestartermc.crates.animation.ScrollingAnimation;
 import com.firestartermc.crates.crate.CratePreview;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -35,13 +35,13 @@ public class InteractionListener implements Listener {
         var item = event.getItem();
 
         if (item != null && crate.isKey(item)) {
-            if (plugin.animationController().isViewingAnimation(player)) {
+            if (plugin.animationController().isBeingViewed(crate)) {
                 return;
             }
 
             var reward = crate.selectRandomReward();
             var lightning = crate.name().equals("luminous"); // TODO dum lazy hack
-            plugin.animationController().playAnimation(player, new FlashAnimation(crate, reward, player, lightning));
+            plugin.animationController().playAnimation(crate, new ScrollingAnimation(crate, player, reward, lightning));
 
             item.subtract();
             return;
